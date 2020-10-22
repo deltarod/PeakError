@@ -12,6 +12,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/deltarod/PeakError/",
+    install_requires=['numpy', 'pandas'],
     package_dir={'': 'Python'},
     py_modules=['PeakError', 'check'],
     ext_modules=[setuptools.Extension('PeakErrorInterface', ['src/interface.c', 'src/PeakError.c'])],

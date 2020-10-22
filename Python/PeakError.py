@@ -10,11 +10,23 @@ def pandasError(peaks, regions):
     if not util.checkChrom(regions):
         return
 
+    peakGroup = peaks.groupby('chrom')
+    regionGroup = regions.groupby('chrom')
+    errorList = []
 
+    for chrom in regions['chrom'].unique():
+        try:
+            p = peakGroup.get_group(chrom)
+        except KeyError:
+            p = pd.DataFrame(columns=['chrom', 'chromStart', 'chromEnd'])
 
+        r = regionGroup.get_group(chrom)
 
+        result = pandasErrorChrom(p, r)
 
-    return "Bottom"
+        errorList.append(result)
+
+    return pd.concat(errorList, ignore_index=True)
 
 
 def pandasErrorChrom(peaks, regions):
@@ -54,3 +66,19 @@ def pandasErrorChrom(peaks, regions):
     error['status'] = error.apply(util.status, axis=1)
 
     return error
+
+
+def pandasSummarize(df):
+    regions = len(df.index)
+    fp = df['fp'].sum()
+    possible_fp = df['possible_fp'].sum()
+    fn = df['fn'].sum()
+    possible_fn = df['possible_tp'].sum()
+    errors = fp + fn
+    
+    outputdict = {'regions': [regions], 'fp': [fp], "possible_fp": [possible_fp],
+                  'fn': [fn], 'possible_fn': [possible_fn], 'errors': [errors]}
+
+    outputDf = pd.DataFrame(outputdict)
+
+    return outputDf

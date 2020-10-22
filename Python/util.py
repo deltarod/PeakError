@@ -25,8 +25,11 @@ def checkChrom(df):
     if not isinstance(df, pd.DataFrame):
         return False
 
-    if not df['chrom'].dtype == np.number:
-        return False
+    for val in df['chrom']:
+        if not isinstance(val, str):
+            return False
+
+    # TODO: Check if factor
 
     return True
 

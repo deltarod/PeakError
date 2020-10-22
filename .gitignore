@@ -2,5 +2,9 @@
 .Rhistory
 *.o
 *.so
-/Python/PeakError.egg-info/
+*/PeakError.egg-info/
 /PeakError.egg-info/
+/.idea/
+/build/
+*/__pycache__/
+/dist/
