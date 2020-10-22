@@ -1,0 +1,4 @@
+chr2	10	20	noPeaks
+chr2	30	40	peakStart
+chr2	50	60	peakEnd
+chr2	70	80	peaks
