@@ -1,4 +1,5 @@
 import setuptools
+import numpy
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
@@ -18,7 +19,9 @@ setuptools.setup(
     extras_require={
         'test': ['pytest']
     },
-    ext_modules=[setuptools.Extension('PeakErrorInterface', ['src/interface.c', 'src/PeakError.c'])],
+    ext_modules=[setuptools.Extension('PeakErrorInterface',
+                                      ['src/interface.c', 'src/PeakError.c'],
+                                      include_dirs=[numpy.get_include()])],
     classifiers=[
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
