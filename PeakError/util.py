@@ -1,5 +1,5 @@
 import numpy as np
-import PeakErrorPandas as pd
+import pandas as pd
 
 
 def checkPositions(df):
