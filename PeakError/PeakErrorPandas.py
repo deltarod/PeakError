@@ -1,4 +1,4 @@
-from PeakErrorInterface import interface
+from .PeakErrorInterface import interface
 import util
 import numpy as np
 import pandas as pd
