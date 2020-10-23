@@ -1,53 +1,139 @@
-/* -*- compile-command: "R CMD INSTALL .." -*- */
-
+#define PY_SSIZE_T_CLEAN
+#define NPY_NO_DEPRECATED_API NPY_1_9_API_VERSION
+#include <Python.h>
+#include <numpy/arrayobject.h>
 #include "PeakError.h"
-#include <R.h>
-#include <R_ext/Rdynload.h>
 
-void PeakError_interface
-(int* peak_start, int* peak_end, int* peak_count,
- int* region_start, int* region_end, int* region_ann, 
- int* region_count,
- int* region_tp, int* region_fp,
- int* region_possible_tp, int* region_possible_fp){
-    int status;
-    status = PeakError(peak_start, peak_end, *peak_count,
-		       region_start, region_end, region_ann,
-		       *region_count,
-		       region_tp, region_fp,
-		       region_possible_tp, region_possible_fp);
+static PyObject *
+PeakErrorInterface(PyObject *self, PyObject *args)
+{
+    PyArrayObject *peak_start, *peak_end,
+    *region_start, *region_end, *region_ann;
+
+    int *peak_count, *region_count;
+
+    if(!PyArg_ParseTuple(args, "O!O!iO!O!O!i",
+                         &PyArray_Type, &peak_start,
+                         &PyArray_Type, &peak_end,
+                         &peak_count,
+                         &PyArray_Type, &region_start,
+                         &PyArray_Type, &region_end,
+                         &PyArray_Type, &region_ann,
+                         &region_count))
+    {
+        return NULL;
+    }
+
+    if(PyArray_TYPE(peak_start)!=NPY_INT){
+        PyErr_SetString(PyExc_TypeError,
+                        "peak_start must be numpy.ndarray type int");
+        return NULL;
+    }
+
+    if(PyArray_TYPE(peak_end)!=NPY_INT){
+        PyErr_SetString(PyExc_TypeError,
+                        "peak_end must be numpy.ndarray type int");
+        return NULL;
+    }
+    if(PyArray_TYPE(region_start)!=NPY_INT){
+        PyErr_SetString(PyExc_TypeError,
+                        "region_start must be numpy.ndarray type int");
+        return NULL;
+    }
+
+    if(PyArray_TYPE(region_end)!=NPY_INT){
+        PyErr_SetString(PyExc_TypeError,
+                        "region_end must be numpy.ndarray type int");
+        return NULL;
+    }
+
+    if(PyArray_TYPE(region_ann)!=NPY_INT){
+        PyErr_SetString(PyExc_TypeError,
+                        "region_ann must be numpy.ndarray type int");
+        return NULL;
+    }
+
+    npy_intp col_dim = PyArray_DIM(region_start, 0);
+    PyArrayObject *tp, *fp, *possible_tp, *possible_fp;
+
+    tp = PyArray_ZEROS(1, &col_dim, NPY_INT, 0);
+    int *tpA = (int*)PyArray_DATA(tp);
+    fp = PyArray_ZEROS(1, &col_dim, NPY_INT, 0);
+    int *fpA = (int*)PyArray_DATA(fp);
+    possible_tp = PyArray_ZEROS(1, &col_dim, NPY_INT, 0);
+    int *possible_tpA = (int*)PyArray_DATA(possible_tp);
+    possible_fp = PyArray_ZEROS(1, &col_dim, NPY_INT, 0);
+    int *possible_fpA = (int*)PyArray_DATA(possible_fp);
+
+    int *peak_startA = (int*)PyArray_DATA(peak_start);
+    int *peak_endA = (int*)PyArray_DATA(peak_end);
+    int *region_startA = (int*)PyArray_DATA(region_start);
+    int *region_endA = (int*)PyArray_DATA(region_end);
+    int *region_annA = (int*)PyArray_DATA(region_ann);
+
+    int status = PeakError(peak_startA, peak_endA, peak_count,
+                           region_startA, region_endA, region_annA,
+                           region_count,
+                           tpA, fpA,
+                           possible_tpA, possible_fpA);
+
+
     if(status == ERROR_UNDEFINED_ANNOTATION){
-	error("undefined annotation");
+        PyErr_SetString(PyExc_ValueError,
+                        "undefined annotation");
     }
     if(status == ERROR_REGIONS_NOT_INCREASING){
-	error("regions not increasing");
+        PyErr_SetString(PyExc_ValueError,
+                        "regions not increasing");
     }
     if(status == ERROR_PEAKS_NOT_INCREASING){
-	error("peaks not increasing");
+        PyErr_SetString(PyExc_ValueError,
+                        "peaks not increasing");
     }
     if(status == ERROR_OVERLAPPING_PEAKS){
-	error("overlapping peaks");
+        PyErr_SetString(PyExc_ValueError,
+                        "overlapping peaks");
     }
     if(status == ERROR_OVERLAPPING_REGIONS){
-	error("overlapping regions");
+        PyErr_SetString(PyExc_ValueError,
+                        "overlapping regions");
     }
     if(status != 0){
-	error("error code %d", status);
+        return NULL;
     }
+
+    return Py_BuildValue("{s:N,s:N,s:N,s:N}",
+                         "tp", tp,
+                         "fp", fp,
+                         "possible_tp", possible_tp,
+                         "possible_fp", possible_fp);
 }
-	
-R_CMethodDef cMethods[] = {
-  {"PeakError_interface",
-   (DL_FUNC) &PeakError_interface, 11
-   //,{REALSXP, REALSXP, INTSXP, INTSXP, REALSXP}
-  },
-  {NULL, NULL, 0}
+
+static PyMethodDef Methods[] = {
+        {"interface", PeakErrorInterface, METH_VARARGS,
+                        "Label Error calculation for peaks within a region"},
+        {NULL, NULL, 0, NULL}
 };
 
-void R_init_PeakError(DllInfo *info) {
-  R_registerRoutines(info, cMethods, NULL, NULL, NULL);
-  //R_useDynamicSymbols call says the DLL is not to be searched for
-  //entry points specified by character strings so .C etc calls will
-  //only find registered symbols.
-  R_useDynamicSymbols(info, FALSE);
+static struct PyModuleDef moduleDef =
+        {
+        PyModuleDef_HEAD_INIT,
+        "PeakErrorInterface",
+        "A Python extension for PeakError",
+        -1,
+        Methods
+        };
+
+
+PyMODINIT_FUNC
+PyInit_PeakErrorInterface(void)
+{
+    PyObject *module;
+    module = PyModule_Create(&moduleDef);
+    if(module == NULL) return NULL;
+    import_array();//necessary from numpy otherwise we crash with segfault
+    return module;
 }
+
+
+

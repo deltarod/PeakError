@@ -2,3 +2,8 @@
 .Rhistory
 *.o
 *.so
+*.egg-info/
+/.idea/
+/build/
+*/__pycache__/
+/dist/

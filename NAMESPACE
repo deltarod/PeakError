@@ -1,3 +1,0 @@
-useDynLib(PeakError)
-exportPattern("^[[:alpha:]]+")
-
