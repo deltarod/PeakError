@@ -1,5 +1,4 @@
-from .PeakErrorInterface import interface
-import util
+from . import util, PeakErrorInterface
 import numpy as np
 import pandas as pd
 
@@ -49,9 +48,12 @@ def errorChrom(peaks, regions):
             print("Annotation %s was found, invalid annotation" % unique)
             return
 
-    output = interface(p['chromStart'].to_numpy(dtype=np.intc), p['chromEnd'].to_numpy(dtype=np.intc), len(p.index),
-                       r['chromStart'].to_numpy(dtype=np.intc), r['chromEnd'].to_numpy(dtype=np.intc),
-                       code.to_numpy(dtype=np.intc), len(r.index))
+    output = PeakErrorInterface.interface(p['chromStart'].to_numpy(dtype=np.intc),
+                                          p['chromEnd'].to_numpy(dtype=np.intc),
+                                          len(p.index),
+                                          r['chromStart'].to_numpy(dtype=np.intc),
+                                          r['chromEnd'].to_numpy(dtype=np.intc),
+                                          code.to_numpy(dtype=np.intc), len(r.index))
 
     error = pd.DataFrame(output)
 
