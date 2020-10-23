@@ -59,11 +59,11 @@ def errorChrom(peaks, regions):
 
     outputdf = pd.concat(objs=[r, outputdf], axis=1)
 
-    outputdf['fn'] = error.apply(util.fnCalc, axis=1)
+    outputdf['fn'] = outputdf.apply(util.fnCalc, axis=1)
 
-    outputdf['status'] = error.apply(util.status, axis=1)
+    outputdf['status'] = outputdf.apply(util.status, axis=1)
 
-    return error
+    return outputdf
 
 
 def summarize(df):
