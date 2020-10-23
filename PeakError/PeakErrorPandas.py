@@ -55,17 +55,13 @@ def errorChrom(peaks, regions):
                                           r['chromEnd'].to_numpy(dtype=np.intc),
                                           code.to_numpy(dtype=np.intc), len(r.index))
 
-    error = pd.DataFrame(output)
+    outputdf = pd.DataFrame(output)
 
-    error = pd.concat(objs=[r, error], axis=1)
+    outputdf = pd.concat(objs=[r, outputdf], axis=1)
 
-    error['fp_status'] = error['fp'].apply(util.fpStatus)
+    outputdf['fn'] = error.apply(util.fnCalc, axis=1)
 
-    error['fn'] = error.apply(util.fnCalc, axis=1)
-
-    error['fn_status'] = error['fn'].apply(util.fnStatus)
-
-    error['status'] = error.apply(util.status, axis=1)
+    outputdf['status'] = error.apply(util.status, axis=1)
 
     return error
 

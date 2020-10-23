@@ -44,29 +44,15 @@ def toCode(annotation):
     return output
 
 
-def fpStatus(val):
-    if val > 0:
-        return 'false positive'
-    else:
-        return 'correct'
-
-
 def fnCalc(row):
     return row['possible_tp'] - row['tp']
-
-
-def fnStatus(val):
-    if val > 0:
-        return 'false negative'
-    else:
-        return 'correct'
 
 
 def status(row):
     if row['fn'] > 0:
         return "false negative"
-    else:
-        if row['fp'] > 0:
-            return "false positive"
-        else:
-            return "correct"
+
+    if row['fp'] > 0:
+        return "false positive"
+
+    return "correct"
