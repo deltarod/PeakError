@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 
 
-def pandasError(peaks, regions):
+def error(peaks, regions):
     if not util.checkChrom(peaks):
         return
     if not util.checkChrom(regions):
@@ -22,14 +22,14 @@ def pandasError(peaks, regions):
 
         r = regionGroup.get_group(chrom)
 
-        result = pandasErrorChrom(p, r)
+        result = errorChrom(p, r)
 
         errorList.append(result)
 
     return pd.concat(errorList, ignore_index=True)
 
 
-def pandasErrorChrom(peaks, regions):
+def errorChrom(peaks, regions):
     if not util.checkPositions(peaks):
         return
 
@@ -68,14 +68,14 @@ def pandasErrorChrom(peaks, regions):
     return error
 
 
-def pandasSummarize(df):
+def summarize(df):
     regions = len(df.index)
     fp = df['fp'].sum()
     possible_fp = df['possible_fp'].sum()
     fn = df['fn'].sum()
     possible_fn = df['possible_tp'].sum()
     errors = fp + fn
-    
+
     outputdict = {'regions': [regions], 'fp': [fp], "possible_fp": [possible_fp],
                   'fn': [fn], 'possible_fn': [possible_fn], 'errors': [errors]}
 
