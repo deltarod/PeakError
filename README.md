@@ -26,4 +26,4 @@ This section will explain how to install pyPeakError
 
 1. `git clone https://github.com/deltarod/PeakError.git`
 2. `cd PeakError/`
-3. `python3 -m pip install -e .`
+3. `python3 -m pip install .`
