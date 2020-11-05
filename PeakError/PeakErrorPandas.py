@@ -23,9 +23,13 @@ def error(peaks, regions):
 
         result = errorChrom(p, r)
 
-        errorList.append(result)
+        if result is not None:
+            errorList.append(result)
 
-    return pd.concat(errorList, ignore_index=True)
+    try:
+        return pd.concat(errorList, ignore_index=True)
+    except ValueError:
+        return
 
 
 def errorChrom(peaks, regions):
