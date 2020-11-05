@@ -22,6 +22,10 @@ Takes the output from either pandasError or pandasErrorChrom and summarizes the 
 ## Installing
 This section will explain how to install pyPeakError
 
+### With Pip
+
+`python3 -m pip install git+https://github.com/deltarod/PeakError.git`
+
 ### From Sources
 
 1. `git clone https://github.com/deltarod/PeakError.git`
