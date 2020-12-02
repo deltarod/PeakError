@@ -1,6 +1,7 @@
-import Peak
+import PeakError
 import pandas as pd
 import os
+
 
 def test_PeakErrorChrom():
     exampleDataPath = '%s/inst/exampleData/' % os.getcwd()
@@ -12,7 +13,7 @@ def test_PeakErrorChrom():
     regionsdf = pd.read_csv(regionsPath, sep='\t', header=None, index_col=False)
     regionsdf.columns = ['chrom', 'chromStart', 'chromEnd', 'annotation']
 
-    output = Peak.errorChrom(peaksdf, regionsdf)
+    output = PeakError.errorChrom(peaksdf, regionsdf)
 
     testfp = [1, 1, 1, 0]
 
@@ -33,7 +34,7 @@ def test_PeakError():
     regionsdf = pd.read_csv(regionsPath, sep='\t', header=None, index_col=False)
     regionsdf.columns = ['chrom', 'chromStart', 'chromEnd', 'annotation']
 
-    output = Peak.error(peaksdf, regionsdf)
+    output = PeakError.error(peaksdf, regionsdf)
 
     testfp = [1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0]
 
@@ -54,9 +55,9 @@ def test_summarize():
     regionsdf = pd.read_csv(regionsPath, sep='\t', header=None, index_col=False)
     regionsdf.columns = ['chrom', 'chromStart', 'chromEnd', 'annotation']
 
-    output = Peak.error(peaksdf, regionsdf)
+    output = PeakError.error(peaksdf, regionsdf)
 
-    summary = Peak.summarize(output)
+    summary = PeakError.summarize(output)
 
     toCheck = [16, 7, 12, 1, 12, 8]
 
