@@ -14,11 +14,11 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/deltarod/PeakError/",
     install_requires=['numpy', 'pandas'],
-    packages=['PeakError'],
+    packages=['Peak'],
     extras_require={
         'test': ['pytest']
     },
-    ext_modules=[setuptools.Extension('PeakError/PeakErrorInterface',
+    ext_modules=[setuptools.Extension('PeakErrorInterface',
                                       ['src/interface.c', 'src/PeakError.c'],
                                       include_dirs=[numpy.get_include()])],
     classifiers=[
