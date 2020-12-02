@@ -1,3 +1,3 @@
-from .PeakErrorPandas import *
+from .Error import *
 
 __all__ = ['error', 'errorChrom', 'summarize']
