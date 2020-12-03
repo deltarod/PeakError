@@ -1,4 +1,6 @@
 # pyPeakError
+![](https://travis-ci.com/deltarod/PeakError.svg?branch=master)
+
 
 A Python3 binding for PeakError, which can be found at [github.com/tdhock/PeakError](https://github.com/tdhock/PeakError)
 
