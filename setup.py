@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="PeakError",
-    version="0.0.1",
+    version="0.0.2",
     author="Tristan Miller",
     author_email="Tristan.Miller@nau.edu",
     description="A Python binding for PeakError",
