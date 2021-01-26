@@ -7,12 +7,11 @@ def checkPositions(df):
         return False
 
     cols = ["chromStart", "chromEnd"]
-
     for column in cols:
         col = df[column]
 
         if not np.int64 == col.dtypes:
-            return False
+            df[column] = col.astype(np.int64)
 
         if (col < 1).empty:
             return False
